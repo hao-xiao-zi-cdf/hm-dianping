@@ -23,8 +23,7 @@ import java.util.List;
  */
 @Service
 public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> implements IVoucherService {
-
-
+    
     @Resource
     private ISeckillVoucherService seckillVoucherService;
 
