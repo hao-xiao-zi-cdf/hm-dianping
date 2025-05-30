@@ -11,6 +11,8 @@ import com.hmdp.utils.DistributedLock;
 import com.hmdp.utils.ILock;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
     @Autowired
     private ILock lock;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     /**
      * 优惠券秒杀
@@ -70,7 +75,11 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 //            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
 //            return proxy.createVoucherOrder(voucherId);
 //        }
-        boolean flag = lock.tryLock("userID:" + id, 1200L);
+//        boolean flag = lock.tryLock("order:" + id, 1200L);
+        //获取锁
+        RLock lock = redissonClient.getLock("order:" + id);
+        //尝试加锁
+        boolean flag = lock.tryLock();
         if(!flag){
             return Result.fail("请稍后重试！");
         }
@@ -79,7 +88,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();
             return proxy.createVoucherOrder(voucherId);
         }finally {
-            lock.unLock("userID:" + id);
+            lock.unlock();
         }
     }
 
