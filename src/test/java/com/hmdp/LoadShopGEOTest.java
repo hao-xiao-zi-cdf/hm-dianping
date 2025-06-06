@@ -40,6 +40,7 @@ public class LoadShopGEOTest {
             return;
         }
 
+
         //2.根据商户类型进行分组
         Map<Long,List<Shop>> shopMap = new HashMap<>();
         for(Shop shop : shopList){
