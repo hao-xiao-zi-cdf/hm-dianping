@@ -109,6 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                     .nickName(USER_NICK_NAME_PREFIX + RandomUtil.randomNumbers(10))
                     .password(DEFAULT_PASSWORD)
                     .build();
+
             //插入user
             save(user);
         }
