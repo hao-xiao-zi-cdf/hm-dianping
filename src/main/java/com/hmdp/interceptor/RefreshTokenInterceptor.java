@@ -46,10 +46,10 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        //4.map集合转为user对象
+        //4.map集合转为userDTO对象
         UserDTO userDTO = BeanUtil.fillBeanWithMap(entries, new UserDTO(), false);
 
-        //5.将user对象存储到ThreadLocal中
+        //5.将userDTO对象存储到ThreadLocal中
         UserHolder.saveUser(userDTO);
 
         //6.刷新redis中token的有效时间
